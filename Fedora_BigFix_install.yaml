@@ -1,0 +1,72 @@
+--- # Install Bigfix Agent for Fedora based Linux
+- hosts: all
+  become: yes
+  
+  tasks:
+  - name: Stop agent if already running
+    service:
+      name: besclient
+      state: stopped
+      
+  - name: Uninstall any previous installs
+    yum:
+      name: BESAgent.x86_64
+      state: absent
+
+  - name: Remove any old configuration files
+    file:
+      name: /etc/opt/BESClient
+      state: absent  
+  
+  - name: Create a directory /tmp/besclientinstall
+    file:
+      path: /tmp/besclientinstall
+      state: directory
+      mode: 0755
+      owner: root
+      group: root
+      
+  - name: Create a directory /etc/opt/BESClient
+    file:
+      path: /etc/opt/BESClient
+      state: directory
+      mode: 0755
+      owner: root
+      group: root
+  
+  - name: Download BESAgent rpm
+    get_url:
+      url: http://sa1x-spacewalk-p1/pub/besclient/BESAgent-9.5.14.73-rhe6.x86_64.rpm
+      dest: /tmp/besclientinstall
+      mode: 0755
+      owner: root
+      group: root
+      
+  - name: Download Masthead
+    get_url:
+      url: http://sa1x-spacewalk-p1/pub/besclient/actionsite.afxm
+      dest: /tmp/besclientinstall
+      mode: 0755
+      owner: root
+      group: root
+
+  - name: Install BESAgent rpm
+    yum:
+      name: /tmp/besclientinstall/BESAgent-9.5.14.73-rhe6.x86_64.rpm
+      state: present
+      
+  - name: Copy Masthead /etc/opt/BESClient
+    copy:
+      src: /tmp/besclientinstall/actionsite.afxm
+      dest: /etc/opt/BESClient/
+      remote_src: yes
+      
+  - name: Start the besclient service
+    service:
+      name: besclient
+      state: started
+      
+  - name: Cleanup /tmp/besclientinstall directory
+    file:
+      path: /tmp/besclientinstall
+      state: absent
