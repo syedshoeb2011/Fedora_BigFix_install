@@ -1,13 +1,9 @@
 --- # Install Bigfix Agent for Fedora based Linux
 - hosts: all
   become: yes
-  
+  gather_facts: no
+
   tasks:
-  - name: Stop agent if already running
-    service:
-      name: besclient
-      state: stopped
-      
   - name: Uninstall any previous installs
     yum:
       name: BESAgent.x86_64
