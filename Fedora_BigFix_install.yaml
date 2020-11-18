@@ -38,7 +38,7 @@
   
   - name: Download BESAgent rpm
     get_url:
-      url: http://sa1x-spacewalk-p1/pub/besclient/BESAgent-9.5.14.73-rhe6.x86_64.rpm
+      url: http://sa1x-spacewalk-p1/pub/besclient/BESAgent-9.5.12.68-rhe6.x86_64.rpm
       dest: /tmp/besclientinstall
       mode: 0755
       owner: root
@@ -54,7 +54,7 @@
 
   - name: Install BESAgent rpm
     yum:
-      name: /tmp/besclientinstall/BESAgent-9.5.14.73-rhe6.x86_64.rpm
+      name: /tmp/besclientinstall/BESAgent-9.5.12.68-rhe6.x86_64.rpm
       state: present
       
   - name: Copy Masthead /etc/opt/BESClient
